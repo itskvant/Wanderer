@@ -1,0 +1,11 @@
+{
+  "replace": "false",
+  "values": [
+    "thewanderer:wanderer_rune",
+    "thewanderer:speed_rune",
+    "thewanderer:health_rune",
+    "thewanderer:resistance_rune",
+    "thewanderer:luck_rune",
+    "thewanderer:strength_rune"
+  ]
+}

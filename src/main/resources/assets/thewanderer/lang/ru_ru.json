@@ -1,0 +1,22 @@
+{
+  "item.thewanderer.speed_rune": "Руна скорости",
+  "item.thewanderer.wanderer_rune": "Руна странника",
+  "item.thewanderer.health_rune": "Руна жизни",
+  "item.thewanderer.luck_rune": "Руна удачи",
+  "item.thewanderer.strength_rune": "Руна силы",
+  "item.thewanderer.resistance_rune": "Руна защиты",
+  "item.thewanderer.raw_volub": "Сырой волубь",
+  "item.thewanderer.cooked_volub": "Жареный волубь",
+  "tooltip.thewanderer.speed_rune.tooltip": "",
+  "tooltip.thewanderer.wanderer_rune.tooltip": "",
+  "tooltip.thewanderer.health_rune.tooltip": "",
+  "tooltip.thewanderer.luck_rune.tooltip": "",
+  "tooltip.thewanderer.resistance_rune.modifiers": "§9-20% Получаемый урон",
+  "tooltip.thewanderer.wanderer_rune.modifiers_1": "§9В этой руне есть что-то необяъснимое... Легенды гласят что в прошлом путешественники использовали эту руну для путешествий между мирами",
+  "tooltip.thewanderer.wanderer_rune.modifiers_2": "§f[Подсказка: нажмите B]",
+  "curios.identifier.rune": "Руна",
+  "curios.modifiers.rune": "§6Модификаторы:",
+  "itemGroup.thewanderer": "The Wanderer",
+  "key.thewanderer.wanderer_rune": "Использоваь руну Странника",
+  "exception.thewanderer.wanderer_rune_not_present": "§cРуна Странника не экипирована"
+}
