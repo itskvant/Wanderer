@@ -152,13 +152,14 @@ repositories {
     //     dir 'libs'
     // }
     maven { url = "https://maven.theillusivec4.top/" }
+    maven { url = "https://repo.u-team.info" }
 }
 
 dependencies {
     // Specify the version of Minecraft to use. If this is any group other than 'net.minecraft', it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.18.2-40.1.0'
+    minecraft 'net.minecraftforge:forge:1.18.2-40.1.52'
 
     // Real mod deobf dependency examples - these get remapped to your current mappings
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency
@@ -173,6 +174,8 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.2-5.0.7.0")
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.2-5.0.7.0:api")
+    implementation fg.deobf("info.u-team:u_team_core-1.18.2:4.0.1.216")
+    runtimeOnly fg.deobf("info.u-team:useful_backpacks-1.18.2:1.12.2.94")
 }
 
 // Example for how to get properties into the manifest for reading at runtime.

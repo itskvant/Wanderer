@@ -37,7 +37,6 @@ public class TheWanderer {
     public static final Logger LOGGER = LogUtils.getLogger();
     public static final String MOD_ID = "thewanderer";
 
-
     public TheWanderer()
     {
         // Register the setup method for modloading
