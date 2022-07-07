@@ -60,7 +60,7 @@ public class NetherTent extends StructureFeature<JigsawConfiguration> {
         BlockState belowBlockState = column.getBlock(minY);
         for (int i = minY; i < maxTerrainY; i++) {
             BlockState block = column.getBlock(i);
-            if (block.isAir() && belowBlockState.getFluidState().isEmpty()) {
+            if (block.isAir() && !belowBlockState.isAir() && belowBlockState.getFluidState().isEmpty()) {
                 return Optional.of(i);
             }
 
