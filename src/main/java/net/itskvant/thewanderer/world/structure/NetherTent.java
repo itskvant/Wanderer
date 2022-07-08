@@ -4,25 +4,23 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.itskvant.thewanderer.TheWanderer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.NoiseColumn;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.GenerationStep;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
-import net.minecraft.world.level.levelgen.structure.BuiltinStructureSets;
 import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
 import net.minecraft.world.level.levelgen.structure.PostPlacementProcessor;
 import net.minecraft.world.level.levelgen.structure.pieces.PieceGenerator;
 import net.minecraft.world.level.levelgen.structure.pieces.PieceGeneratorSupplier;
 import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
-import org.apache.logging.log4j.Level;
 
 import java.util.Optional;
 
-public class SkyStructures extends StructureFeature<JigsawConfiguration> {
+public class NetherTent extends StructureFeature<JigsawConfiguration> {
 
     // A custom codec that changes the size limit for our code_structure_sky_fan.json's config to not be capped at 7.
     // With this, we can have a structure with a size limit up to 30 if we want to have extremely long branches of pieces in the structure.
@@ -33,9 +31,9 @@ public class SkyStructures extends StructureFeature<JigsawConfiguration> {
         ).apply(codec, JigsawConfiguration::new);
     });
 
-    public SkyStructures() {
+    public NetherTent() {
         // Create the pieces layout of the structure and give it to the game
-        super(CODEC, SkyStructures::createPiecesGenerator, PostPlacementProcessor.NONE);
+        super(CODEC, NetherTent::createPiecesGenerator, PostPlacementProcessor.NONE);
     }
 
     /**
@@ -50,50 +48,27 @@ public class SkyStructures extends StructureFeature<JigsawConfiguration> {
         return GenerationStep.Decoration.SURFACE_STRUCTURES;
     }
 
-    /*
-     * This is where extra checks can be done to determine if the structure can spawn here.
-     * This only needs to be overridden if you're adding additional spawn conditions.
-     *
-     * Fun fact, if you set your structure separation/spacing to be 0/1, you can use
-     * isFeatureChunk to return true only if certain chunk coordinates are passed in
-     * which allows you to spawn structures only at certain coordinates in the world.
-     *
-     * Basically, this method is used for determining if the land is at a suitable height,
-     * if certain other structures are too close or not, or some other restrictive condition.
-     *
-     * For example, Pillager Outposts added a check to make sure it cannot spawn within 10 chunk of a Village.
-     * (Bedrock Edition seems to not have the same check)
-     *
-     * If you are doing Nether structures, you'll probably want to spawn your structure on top of ledges.
-     * Best way to do that is to use getBaseColumn to grab a column of blocks at the structure's x/z position.
-     * Then loop through it and look for land with air above it and set blockpos's Y value to it.
-     * Make sure to set the final boolean in JigsawPlacement.addPieces to false so
-     * that the structure spawns at blockpos's y value instead of placing the structure on the Bedrock roof!
-     *
-     * Also, please for the love of god, do not do dimension checking here.
-     * If you do and another mod's dimension is trying to spawn your structure,
-     * the locate command will make minecraft hang forever and break the game.
-     * Use the biome tags for where to spawn the structure and users can datapack
-     * it to spawn in specific biomes that aren't in the dimension they don't like if they wish.
-     */
-    private static boolean isFeatureChunk(PieceGeneratorSupplier.Context<JigsawConfiguration> context, BlockPos blockpos) {
-        // Grabs the chunk position we are at
 
-        // Checks to make sure our structure does not spawn within 10 chunks of an Ocean Monument
-        // to demonstrate how this method is good for checking extra conditions for spawning
-        return !(blockpos.getY() == 0);
-    }
+    public static Optional<Integer> getBlockPosY(PieceGeneratorSupplier.Context<JigsawConfiguration> context, BlockPos blockpos) {
+        // getBaseColumn requires the x and z to be in world coordinates. Not chunk coordinates.
+        NoiseColumn column = context.chunkGenerator().getBaseColumn(blockpos.getX(), blockpos.getZ(), context.heightAccessor());
 
-    public static int getBlockPosY(PieceGeneratorSupplier.Context<JigsawConfiguration> context) {
-        ChunkPos chunkPos = context.chunkPos();
-        NoiseColumn column = context.chunkGenerator().getBaseColumn(chunkPos.x, chunkPos.z, context.heightAccessor());
-        for (int i = 0; i <= 126; i++) {
+        // Get the true min and max y for the world's terrain. Works with any nether height people chose by datapacks.
+        int minY = context.chunkGenerator().getMinY();
+        int maxTerrainY = minY + context.chunkGenerator().getGenDepth();
+
+        BlockState belowBlockState = column.getBlock(minY);
+        for (int i = minY; i < maxTerrainY; i++) {
             BlockState block = column.getBlock(i);
-            if (block.isAir()) {
-                return i - 1;
+            if (block.isAir() && !belowBlockState.isAir() && belowBlockState.getFluidState().isEmpty()) {
+                return Optional.of(i);
             }
+
+            belowBlockState = block;
         }
-        return 0;
+
+        // No valid spot found. Return nothing.
+        return Optional.empty();
     }
 
     public static Optional<PieceGenerator<JigsawConfiguration>> createPiecesGenerator(PieceGeneratorSupplier.Context<JigsawConfiguration> context) {
@@ -104,16 +79,18 @@ public class SkyStructures extends StructureFeature<JigsawConfiguration> {
 
         // Turns the chunk coordinates into actual coordinates we can use. (Gets center of that chunk)
         BlockPos blockpos = context.chunkPos().getMiddleBlockPosition(0);
+        Optional<Integer> chosenY = getBlockPosY(context, blockpos);
+
+        // If the spot is invalid and gave no y value to use, skip this spot.
+        if (chosenY.isEmpty()) {
+            return Optional.empty();
+        }
+
         // Set's our spawning blockpos's y offset to be 60 blocks up.
         // Since we are going to have heightmap/terrain height spawning set to true further down, this will make it so we spawn 60 blocks above terrain.
         // If we wanted to spawn on ocean floor, we would set heightmap/terrain height spawning to false and the grab the y value of the terrain with OCEAN_FLOOR_WG heightmap.
         // blockpos = blockpos.above(60);
-
-        BlockPos newBlockPos = new BlockPos(blockpos.getX(), getBlockPosY(context), blockpos.getZ());
-
-        if (!SkyStructures.isFeatureChunk(context, blockpos)) {
-            return Optional.empty();
-        }
+        BlockPos newBlockPos = new BlockPos(blockpos.getX(), chosenY.get(), blockpos.getZ());
 
         Optional<PieceGenerator<JigsawConfiguration>> structurePiecesGenerator =
                 JigsawPlacement.addPieces(
