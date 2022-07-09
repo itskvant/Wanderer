@@ -132,6 +132,15 @@
           "chance": 0.2
         }
       ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:water_bucket"
+        }
+      ]
     }
   ]
 }
