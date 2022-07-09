@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -31,12 +32,25 @@ public final class ClientForgeEvents {
 
     @SubscribeEvent
     public static void clientTick(TickEvent.ClientTickEvent event) {
-
-
-//        LazyOptional<IItemHandlerModifiable> curios = CuriosApi.getCuriosHelper().getEquippedCurios(player);
-//        boolean isWandererRuneEquipped = curios.filter()
-//        if (KeyInit.exampleKeyMapping.isDown()) {
-//            Minecraft.getInstance().player.displayClientMessage(new TextComponent("hello"), true);
-//        }
+        if (KeyInit.exampleKeyMapping.isDown()) {
+            Player player = (Player) Minecraft.getInstance().player;
+            if (!player.level.isClientSide()) {
+                Optional<SlotResult> curio = CuriosApi.getCuriosHelper().findFirstCurio(player, ModItems.WANDERERRUNE.get());
+                if (curio.isPresent()) {
+                    if (player.level.dimension() == Level.OVERWORLD) {
+                        Vec3 pos = player.position();
+                        player.changeDimension(player.level.getServer().getLevel(ServerLevel.NETHER), new VoidTeleporter((ServerLevel) player.getLevel()));
+                        player.teleportTo(pos.x / 8, pos.y, pos.z / 8);
+                    }
+                    else if (player.level.dimension() == Level.NETHER) {
+                        Vec3 pos = player.position();
+                        player.changeDimension(player.level.getServer().getLevel(ServerLevel.OVERWORLD), new VoidTeleporter((ServerLevel) player.getLevel()));
+                        player.teleportTo(pos.x * 8, pos.y, pos.z * 8);
+                    }
+                } else {
+                    player.displayClientMessage(new TranslatableComponent("exception.thewanderer.wanderer_rune_not_present"), true);
+                }
+            }
+        }
     }
 }

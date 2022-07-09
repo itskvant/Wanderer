@@ -52,28 +52,6 @@ public class WandererRune extends Item implements  ICurioItem {
         );
     }
 
-    @Override
-    public void curioTick(String identifier, int index, LivingEntity livingEntity, ItemStack stack) {
-        if (!(livingEntity instanceof Player player)) return;
-        if (!player.level.isClientSide()){
-            if (KeyInit.exampleKeyMapping.consumeClick()) {
-                if (player.level.dimension() == Level.OVERWORLD) {
-                    Vec3 pos = player.position();
-                    player.changeDimension(player.level.getServer().getLevel(ServerLevel.NETHER), new VoidTeleporter((ServerLevel) player.getLevel()));
-                    player.teleportTo(pos.x/8, pos.y, pos.z/8);
-                    player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 100, 200, false, false));
-                }
-                else if (player.level.dimension() == Level.NETHER) {
-                    Vec3 pos = player.position();
-                    player.changeDimension(player.level.getServer().getLevel(ServerLevel.OVERWORLD), new VoidTeleporter((ServerLevel) player.getLevel()));
-                    player.teleportTo(pos.x*8, pos.y, pos.z*8);
-                    player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 100, 200, false, false));
-                }
-            }
-        }
-
-        ICurioItem.super.curioTick(identifier, index, livingEntity, stack);
-    }
 
     @NotNull
     @Override
