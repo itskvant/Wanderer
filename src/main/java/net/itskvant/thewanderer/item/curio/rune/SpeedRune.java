@@ -22,21 +22,14 @@ public class SpeedRune extends Item implements ICurioItem {
         super(pProperties);
     }
 
-//    @Override
-//    public void curioTick(String identifier, int index, LivingEntity livingEntity, ItemStack stack) {
-//
-//        Player player = (Player) livingEntity;
-//        player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 10, 0,
-//                false, false));
-//
-//        ICurioItem.super.curioTick(identifier, index, livingEntity, stack);
-//    }
-
     @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(SlotContext slotContext, UUID uuid, ItemStack stack) {
-        Multimap<Attribute, AttributeModifier> atts = LinkedHashMultimap.create();
-        atts.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(uuid, "speed_bonus", 0.2, AttributeModifier.Operation.MULTIPLY_BASE));
-        return atts;
+    public void curioTick(String identifier, int index, LivingEntity livingEntity, ItemStack stack) {
+
+        Player player = (Player) livingEntity;
+        player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 10, 0,
+                false, false));
+
+        ICurioItem.super.curioTick(identifier, index, livingEntity, stack);
     }
 
     @Override

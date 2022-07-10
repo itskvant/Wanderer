@@ -22,23 +22,15 @@ public class StrengthRune extends Item implements ICurioItem{
         super(pProperties);
     }
 
-//    @Override
-//    public void curioTick(String identifier, int index, LivingEntity livingEntity, ItemStack stack) {
-//
-//        Player player = (Player) livingEntity;
-//        player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 10, 0,
-//                false, false));
-//
-//        ICurioItem.super.curioTick(identifier, index, livingEntity, stack);
-//    }
-
     @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(SlotContext slotContext, UUID uuid, ItemStack stack) {
-        Multimap<Attribute, AttributeModifier> atts = LinkedHashMultimap.create();
-        atts.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(uuid, "attack_bonus", 0.2, AttributeModifier.Operation.MULTIPLY_TOTAL));
-        return atts;
-    }
+    public void curioTick(String identifier, int index, LivingEntity livingEntity, ItemStack stack) {
 
+        Player player = (Player) livingEntity;
+        player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 10, 0,
+                false, false));
+
+        ICurioItem.super.curioTick(identifier, index, livingEntity, stack);
+    }
 
     @Override
     public boolean canRightClickEquip(ItemStack stack) {

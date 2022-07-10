@@ -22,21 +22,14 @@ public class LuckRune extends Item implements ICurioItem{
         super(pProperties);
     }
 
-//    @Override
-//    public void curioTick(String identifier, int index, LivingEntity livingEntity, ItemStack stack) {
-//
-//        Player player = (Player) livingEntity;
-//        player.addEffect(new MobEffectInstance(MobEffects.LUCK, 10, 0,
-//                false, false));
-//
-//        ICurioItem.super.curioTick(identifier, index, livingEntity, stack);
-//    }
-
     @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(SlotContext slotContext, UUID uuid, ItemStack stack) {
-        Multimap<Attribute, AttributeModifier> atts = LinkedHashMultimap.create();
-        atts.put(Attributes.LUCK, new AttributeModifier(uuid, "luck", 1, AttributeModifier.Operation.ADDITION));
-        return atts;
+    public void curioTick(String identifier, int index, LivingEntity livingEntity, ItemStack stack) {
+
+        Player player = (Player) livingEntity;
+        player.addEffect(new MobEffectInstance(MobEffects.LUCK, 10, 0,
+                false, false));
+
+        ICurioItem.super.curioTick(identifier, index, livingEntity, stack);
     }
 
     @Override
