@@ -1,7 +1,6 @@
 package net.itskvant.thewanderer.item.curio.rune;
 
 import com.google.common.collect.Multimap;
-import net.itskvant.thewanderer.client.KeyInit;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;

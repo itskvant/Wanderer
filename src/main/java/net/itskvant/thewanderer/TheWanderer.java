@@ -1,6 +1,8 @@
 package net.itskvant.thewanderer;
 
 import com.mojang.logging.LogUtils;
+import net.itskvant.thewanderer.client.KeyBindings;
+import net.itskvant.thewanderer.client.KeyInputHandler;
 import net.itskvant.thewanderer.item.ModItems;
 import net.itskvant.thewanderer.world.structure.ModStructures;
 import net.minecraft.resources.ResourceLocation;
@@ -9,6 +11,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -29,6 +32,7 @@ public class TheWanderer {
 
         ModItems.register(eventBus);
 
+        eventBus.addListener(this::clientSetup);
         eventBus.addListener(this::setup);
         eventBus.addListener(this::enqueueIMC);
 
@@ -44,10 +48,15 @@ public class TheWanderer {
                 .icon(new ResourceLocation("curios:slot/rune_template")).size(3).build());
     }
 
+    private void clientSetup(final FMLClientSetupEvent event) {
+        MinecraftForge.EVENT_BUS.addListener(KeyInputHandler::onKeyInput);
+        KeyBindings.init();
+    }
+
     private void setup(final FMLCommonSetupEvent event)
     {
         // some preinit code
-
+        Messages.register();
         LOGGER.info("HELLO FROM PREINIT");
         LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
     }

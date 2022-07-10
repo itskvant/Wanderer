@@ -35,7 +35,7 @@ public class SpeedRune extends Item implements ICurioItem {
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(SlotContext slotContext, UUID uuid, ItemStack stack) {
         Multimap<Attribute, AttributeModifier> atts = LinkedHashMultimap.create();
-        atts.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(uuid, "speed_bonus", 0.2, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        atts.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(uuid, "speed_bonus", 0.2, AttributeModifier.Operation.MULTIPLY_BASE));
         return atts;
     }
 

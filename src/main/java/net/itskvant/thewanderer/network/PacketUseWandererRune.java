@@ -1,39 +1,39 @@
-package net.itskvant.thewanderer.client.events;
+package net.itskvant.thewanderer.network;
 
-import net.itskvant.thewanderer.TheWanderer;
-import net.itskvant.thewanderer.client.KeyInit;
 import net.itskvant.thewanderer.item.ModItems;
 import net.itskvant.thewanderer.item.curio.rune.VoidTeleporter;
-import net.itskvant.thewanderer.item.curio.rune.WandererRune;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.NetworkEvent;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotResult;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
-@Mod.EventBusSubscriber(modid = TheWanderer.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
-public final class ClientForgeEvents {
+public class PacketUseWandererRune {
 
-    private ClientForgeEvents() {
+    public static final String MESSAGE_NO_MANA = "message.nomana";
+
+    public PacketUseWandererRune() {
     }
 
-    @SubscribeEvent
-    public static void clientTick(TickEvent.ClientTickEvent event) {
-        if (KeyInit.exampleKeyMapping.isDown()) {
-            Player player = (Player) Minecraft.getInstance().player;
+    public PacketUseWandererRune(FriendlyByteBuf buf) {
+    }
+
+    public void toBytes(FriendlyByteBuf buf) {
+    }
+
+    public boolean handle(Supplier<NetworkEvent.Context> supplier) {
+        NetworkEvent.Context ctx = supplier.get();
+        ctx.enqueueWork(() -> {
+            // Here we are server side
+            ServerPlayer player = ctx.getSender();
             if (!player.level.isClientSide()) {
                 Optional<SlotResult> curio = CuriosApi.getCuriosHelper().findFirstCurio(player, ModItems.WANDERERRUNE.get());
                 if (curio.isPresent()) {
@@ -51,6 +51,7 @@ public final class ClientForgeEvents {
                     player.displayClientMessage(new TranslatableComponent("exception.thewanderer.wanderer_rune_not_present"), true);
                 }
             }
-        }
+        });
+        return true;
     }
 }
