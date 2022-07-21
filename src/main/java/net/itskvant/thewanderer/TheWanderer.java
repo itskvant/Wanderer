@@ -1,9 +1,12 @@
 package net.itskvant.thewanderer;
 
+import com.mojang.datafixers.optics.Wander;
 import com.mojang.logging.LogUtils;
 import net.itskvant.thewanderer.client.KeyBindings;
 import net.itskvant.thewanderer.client.KeyInputHandler;
+import net.itskvant.thewanderer.enchantment.ModEnchantments;
 import net.itskvant.thewanderer.item.ModItems;
+import net.itskvant.thewanderer.item.curio.rune.WandererRune;
 import net.itskvant.thewanderer.world.structure.ModStructures;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
@@ -31,12 +34,12 @@ public class TheWanderer {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         ModItems.register(eventBus);
+        ModStructures.register(eventBus);
+        ModEnchantments.register(eventBus);
 
         eventBus.addListener(this::clientSetup);
         eventBus.addListener(this::setup);
-        eventBus.addListener(this::enqueueIMC);
 
-        ModStructures.register(eventBus);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);

@@ -30,7 +30,7 @@ public class HealthRune extends Item implements ICurioItem{
     public void curioTick(String identifier, int index, LivingEntity livingEntity, ItemStack stack) {
 
         Player player = (Player) livingEntity;
-        player.addEffect(new MobEffectInstance(MobEffects.HEALTH_BOOST, 10, 0,
+        player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 10, 0,
                 false, false));
 
         ICurioItem.super.curioTick(identifier, index, livingEntity, stack);

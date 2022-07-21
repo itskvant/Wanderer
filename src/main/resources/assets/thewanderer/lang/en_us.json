@@ -5,8 +5,8 @@
   "item.thewanderer.luck_rune": "Luck rune",
   "item.thewanderer.strength_rune": "Strength rune",
   "item.thewanderer.resistance_rune": "Resistance rune",
-  "item.thewanderer.raw_volub": "Raw volub",
-  "item.thewanderer.cooked_volub": "Cooked volub",
+  "item.thewanderer.rickroll_music_disc": "Never Gonna Give You Up - Rick Astley",
+  "item.thewanderer.rickroll_music_dics.desc" : "Force your friends to kill you",
 
   "tooltip.thewanderer.speed_rune.tooltip": "",
   "tooltip.thewanderer.wanderer_rune.tooltip": "",
@@ -23,5 +23,5 @@
 
   "key.thewanderer.wanderer_rune": "Use the Wanderer's rune",
 
-  "exception.thewanderer.wanderer_rune_not_present": "§cWanderer's rune isn't equipped"
+  "exception.thewanderer.wanderer_rune_not_present": "§cWanderer's rune isn't equipped",
 }

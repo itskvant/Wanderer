@@ -1,0 +1,10 @@
+{
+  "rickroll": {
+    "sounds": [
+      {
+        "name": "thewanderer:rickroll",
+        "stream": true
+      }
+    ]
+  }
+}
